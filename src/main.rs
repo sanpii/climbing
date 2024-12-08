@@ -10,7 +10,9 @@ type Result<T = ()> = std::result::Result<T, Box<dyn std::error::Error>>;
 
 #[derive(Parser)]
 struct Opt {
-    filename: String,
+    #[clap(long, short)]
+    output: Option<std::path::PathBuf>,
+    filename: std::path::PathBuf,
 }
 
 fn main() -> Result {
@@ -35,7 +37,18 @@ fn main() -> Result {
 
         root.present()?;
     }
-    print(&image)?;
+
+    if let Some(output) = opt.output {
+        image::save_buffer(
+            &output,
+            &image,
+            graph::SIZE.0,
+            graph::SIZE.1,
+            image::ColorType::Rgb8,
+        )?;
+    } else {
+        print(&image)?;
+    }
 
     Ok(())
 }
