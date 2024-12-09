@@ -19,5 +19,5 @@ pub fn draw(
         }
     }
 
-    super::bar::draw("Voix / mûr", data, root)
+    super::bar::draw("Voix / mur", data, root)
 }

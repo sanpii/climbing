@@ -19,7 +19,7 @@ pub fn draw(
         .configure_mesh()
         .disable_x_mesh()
         .disable_y_mesh()
-        .y_desc("Score (n * difficulté)")
+        .y_desc("Score (n * 2^difficulté)")
         .y_label_formatter(&|y| format!("{y:0}"))
         .draw()?;
 
