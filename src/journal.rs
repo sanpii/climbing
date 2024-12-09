@@ -104,24 +104,24 @@ impl Difficulty {
 
 impl From<Difficulty> for plotters::style::RGBColor {
     fn from(value: Difficulty) -> Self {
-        use plotters::style::*;
+        use plotters::style::colors::full_palette::*;
         use Difficulty::*;
 
         match value {
-            B1 => Self(0xff, 0xff, 0x80),
-            B2 => YELLOW,
-            B3 => Self(0xff, 0xD7, 0x00),
-            B4 => Self(0xff, 0xA5, 0x00),
-            B5 => Self(0x83, 0xCE, 0xCE),
-            B6 => BLUE,
-            B7 => Self(0xFF, 0x69, 0x00),
-            B8 => RED,
-            B9 => WHITE,
-            B10 => WHITE,
-            B11 => Self(0x10, 0x10, 0x10),
+            B1 => YELLOW,
+            B2 => YELLOW_700,
+            B3 => ORANGE,
+            B4 => ORANGE_700,
+            B5 => BLUE,
+            B6 => BLUE_700,
+            B7 => RED,
+            B8 => RED_700,
+            B9 => GREY_200,
+            B10 => GREY_500,
+            B11 => GREY_700,
             B12 => BLACK,
-            B13 => Self(0x90, 0xEE, 0x90),
-            B14 => GREEN,
+            B13 => GREEN,
+            B14 => GREEN_700,
         }
     }
 }
