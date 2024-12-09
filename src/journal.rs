@@ -153,10 +153,9 @@ impl std::fmt::Display for Difficulty {
 #[derive(
     Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd, serde::Deserialize, serde::Serialize,
 )]
-#[repr(usize)]
 pub enum Wall {
     #[serde(rename = "Au coin")]
-    AuCoin = 0,
+    AuCoin,
     Arrow,
     #[serde(rename = "Le diamant")]
     LeDiamant,
@@ -232,16 +231,6 @@ impl Wall {
     }
 }
 
-impl From<usize> for Wall {
-    fn from(value: usize) -> Self {
-        if value >= Self::nb() {
-            unreachable!();
-        }
-
-        unsafe { std::mem::transmute::<usize, Wall>(value) }
-    }
-}
-
 impl std::fmt::Display for Wall {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let s = serde_yaml_ng::to_string(self).unwrap();
@@ -253,9 +242,8 @@ impl std::fmt::Display for Wall {
 #[derive(
     Clone, Copy, Debug, Eq, Hash, PartialEq, PartialOrd, Ord, serde::Deserialize, serde::Serialize,
 )]
-#[repr(usize)]
 pub enum Kind {
-    Dalle = 0,
+    Dalle,
     Dever,
     Dierdre,
     Enfant,
