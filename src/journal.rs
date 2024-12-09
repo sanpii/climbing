@@ -150,9 +150,7 @@ impl std::fmt::Display for Difficulty {
     }
 }
 
-#[derive(
-    Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd, serde::Deserialize, serde::Serialize,
-)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, serde::Deserialize, serde::Serialize)]
 pub enum Wall {
     #[serde(rename = "Au coin")]
     AuCoin,
@@ -236,6 +234,18 @@ impl std::fmt::Display for Wall {
         let s = serde_yaml_ng::to_string(self).unwrap();
 
         f.write_str(s.trim_end_matches('\n'))
+    }
+}
+
+impl PartialOrd for Wall {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for Wall {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.to_string().cmp(&other.to_string())
     }
 }
 
