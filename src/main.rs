@@ -9,9 +9,35 @@ use journal::Journal;
 type Result<T = ()> = std::result::Result<T, Box<dyn std::error::Error>>;
 
 #[derive(Parser)]
+/// Draw various graph from climbing journal.
+///
+/// Climbing journal format:
+///
+/// ```yaml
+/// session date in YYYY-MM-DD format:
+///     Wall name:
+///         - bloc difficulty
+/// ```
+///
+/// For example:
+///
+/// ```yaml
+/// 2024-01-01:
+///     Au coin:
+///         - b5
+///         - b6
+///
+/// 2024-01-02:
+///     'Plug & Play':
+///         - b1
+///     La tornade:
+///         - b2
+/// ```
 struct Opt {
     #[clap(long, short)]
+    /// Path to saves the image, by default print the image in terminal.
     output: Option<std::path::PathBuf>,
+    /// Path to your climbing journal.
     filename: std::path::PathBuf,
 }
 
