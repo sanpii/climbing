@@ -17,7 +17,7 @@ lint:clippy:
     stage: lint
     before_script:
         - rustup component add clippy
-    script: cargo clippy -- --deny warnings
+    script: cargo clippy --all-targets --all-features -- --deny warnings
 
 test:
     parallel:
