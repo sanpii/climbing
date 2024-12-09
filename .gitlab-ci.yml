@@ -16,6 +16,8 @@ lint:fmt:
 lint:clippy:
     stage: lint
     before_script:
+        - apt update
+        - apt install -y libfontconfig-dev
         - rustup component add clippy
     script: cargo clippy --all-targets --all-features -- --deny warnings
 
@@ -24,6 +26,9 @@ test:
         matrix:
             - MODE: ['debug', 'release']
     stage: test
+    before_script:
+        - apt update
+        - apt install -y libfontconfig-dev
     script: |
         if [[ $MODE == "release" ]]
         then

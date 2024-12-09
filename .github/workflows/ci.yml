@@ -28,6 +28,8 @@ jobs:
         with:
           components: clippy
 
+      - name: Install fontconfig
+        run: sudo apt update && sudo apt install -y libfontconfig-dev
       - name: Run clippy
         run: cargo clippy --all-targets --all-features -- --deny warnings
 
@@ -43,6 +45,9 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: stable
+
+      - name: Install fontconfig
+        run: sudo apt update && sudo apt install -y libfontconfig-dev
 
       - name: Run tests (debug)
         if: matrix.mode == 'debug'
