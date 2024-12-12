@@ -1,7 +1,7 @@
 use plotters::style::IntoFont as _;
 use std::collections::BTreeMap;
 
-impl From<&crate::Journal> for BTreeMap<crate::journal::Difficulty, f64> {
+impl From<&crate::Journal> for BTreeMap<crate::Cotation, f64> {
     fn from(journal: &crate::Journal) -> Self {
         let mut values = BTreeMap::new();
 
@@ -25,7 +25,7 @@ pub fn draw(
     journal: &crate::Journal,
     root: &plotters::drawing::DrawingArea<plotters::backend::BitMapBackend, plotters::coord::Shift>,
 ) -> crate::Result {
-    let values = BTreeMap::<crate::journal::Difficulty, f64>::from(journal);
+    let values = BTreeMap::<crate::Cotation, f64>::from(journal);
     let total = values.values().sum::<f64>();
 
     root.titled(

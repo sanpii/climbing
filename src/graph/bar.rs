@@ -3,7 +3,7 @@ use std::collections::BTreeMap;
 
 const MARGINS: (u32, u32) = (100, 20);
 
-pub type Data<T> = BTreeMap<T, BTreeMap<crate::journal::Difficulty, i32>>;
+pub type Data<T> = BTreeMap<T, BTreeMap<crate::Cotation, i32>>;
 
 pub fn draw<T: ToString>(
     title: &str,

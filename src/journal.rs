@@ -1,4 +1,3 @@
-use plotters::style::Color as _;
 use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, serde::Deserialize)]
@@ -50,16 +49,16 @@ impl std::ops::DerefMut for Entries {
 }
 
 #[derive(Clone, Debug, Default, PartialEq, Eq, PartialOrd, Ord, serde::Deserialize)]
-pub struct Entry(Vec<Difficulty>);
+pub struct Entry(Vec<crate::Cotation>);
 
 impl Entry {
     pub fn score(&self) -> u32 {
-        self.0.iter().map(Difficulty::score).sum()
+        self.0.iter().map(crate::Cotation::score).sum()
     }
 }
 
 impl std::ops::Deref for Entry {
-    type Target = Vec<Difficulty>;
+    type Target = Vec<crate::Cotation>;
 
     fn deref(&self) -> &Self::Target {
         &self.0
@@ -69,84 +68,6 @@ impl std::ops::Deref for Entry {
 impl std::ops::DerefMut for Entry {
     fn deref_mut(&mut self) -> &mut Self::Target {
         &mut self.0
-    }
-}
-
-#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, serde::Deserialize)]
-#[serde(rename_all = "lowercase")]
-#[repr(u32)]
-pub enum Difficulty {
-    B1 = 1,
-    B2,
-    B3,
-    B4,
-    B5,
-    B6,
-    B7,
-    B8,
-    B9,
-    B10,
-    B11,
-    B12,
-    B13,
-    B14,
-}
-
-impl Difficulty {
-    pub fn score(&self) -> u32 {
-        2_u32.pow(*self as u32)
-    }
-
-    pub fn nb(&self) -> usize {
-        Self::B14 as usize
-    }
-}
-
-impl From<Difficulty> for plotters::style::RGBColor {
-    fn from(value: Difficulty) -> Self {
-        use plotters::style::colors::full_palette::*;
-        use Difficulty::*;
-
-        match value {
-            B1 => YELLOW,
-            B2 => YELLOW_700,
-            B3 => ORANGE,
-            B4 => ORANGE_700,
-            B5 => BLUE,
-            B6 => BLUE_700,
-            B7 => RED,
-            B8 => RED_700,
-            B9 => GREY_200,
-            B10 => GREY_500,
-            B11 => GREY_700,
-            B12 => BLACK,
-            B13 => GREEN,
-            B14 => GREEN_700,
-        }
-    }
-}
-
-impl From<&Difficulty> for plotters::style::RGBColor {
-    fn from(value: &Difficulty) -> Self {
-        (*value).into()
-    }
-}
-
-impl From<Difficulty> for plotters::style::RGBAColor {
-    fn from(value: Difficulty) -> Self {
-        plotters::style::RGBColor::from(value).mix(1.)
-    }
-}
-
-impl From<Difficulty> for plotters::style::ShapeStyle {
-    fn from(value: Difficulty) -> Self {
-        plotters::style::RGBAColor::from(value).filled()
-    }
-}
-
-impl std::fmt::Display for Difficulty {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{self:?}")
     }
 }
 

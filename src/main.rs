@@ -1,9 +1,11 @@
 #![warn(warnings)]
 
+mod cotation;
 mod graph;
 mod journal;
 
 use clap::Parser;
+use cotation::Cotation;
 use journal::Journal;
 
 type Result<T = ()> = std::result::Result<T, Box<dyn std::error::Error>>;
