@@ -1,1 +1,3 @@
 # climbing
+
+![](example.png)
