@@ -42,17 +42,16 @@ pub fn draw(
         plotters::style::BLACK,
     ))?;
 
-    let regression = Affine::regression(
-        x.clone().map(|x| x.num_days_from_ce() as f32).collect(),
-        y.collect(),
-    );
-
+    let (a, b) = linregress(
+        x.clone().map(|x| x.num_days_from_ce() as f64).collect(),
+        y.map(Into::into).collect(),
+    )?;
     let x0 = x.next().unwrap();
     let x1 = x.last().unwrap();
 
     let points = vec![
-        (x0, regression.y(x0.num_days_from_ce() as f32)),
-        (x1, regression.y(x1.num_days_from_ce() as f32)),
+        (x0, a * x0.num_days_from_ce() as f32 + b),
+        (x1, a * x1.num_days_from_ce() as f32 + b),
     ];
 
     chart.draw_series(plotters::series::DottedLineSeries::new(points, 0, 3, |c| {
@@ -77,46 +76,12 @@ fn bound_y<I: Iterator<Item = f32> + Clone>(data: I) -> std::ops::Range<f32> {
     0f32..max
 }
 
-#[derive(Debug)]
-struct Affine {
-    a: f32,
-    b: f32,
-}
+fn linregress(x: Vec<f64>, y: Vec<f64>) -> crate::Result<(f32, f32)> {
+    let data = linregress::RegressionDataBuilder::new().build_from(vec![("Y", y), ("X", x)])?;
+    let model = linregress::FormulaRegressionBuilder::new()
+        .data(&data)
+        .formula("Y ~ X")
+        .fit_without_statistics()?;
 
-impl Affine {
-    fn y(&self, x: f32) -> f32 {
-        self.a * x + self.b
-    }
-
-    fn regression(x: Vec<f32>, y: Vec<f32>) -> Self {
-        let a = Self::a(&x, &y);
-
-        Self {
-            a,
-            b: Self::b(a, &x, &y),
-        }
-    }
-
-    fn a(x: &[f32], y: &[f32]) -> f32 {
-        Self::variance(x, y) / Self::variance(x, x)
-    }
-
-    fn variance(x: &[f32], y: &[f32]) -> f32 {
-        let mean_x = Self::mean(x);
-        let mean_y = Self::mean(y);
-
-        x.iter()
-            .map(|x| x - mean_x)
-            .zip(y.iter().map(|y| y - mean_y))
-            .map(|(x, y)| x * y)
-            .sum()
-    }
-
-    fn b(a: f32, x: &[f32], y: &[f32]) -> f32 {
-        Self::mean(y) - a * Self::mean(x)
-    }
-
-    fn mean(x: &[f32]) -> f32 {
-        x.iter().sum::<f32>() / x.len() as f32
-    }
+    Ok((model[1] as f32, model[0] as f32))
 }
