@@ -7,20 +7,29 @@ pub fn draw(
     root: &plotters::drawing::DrawingArea<plotters::backend::BitMapBackend, plotters::coord::Shift>,
 ) -> crate::Result {
     let mut x = journal.iter().map(|(x, _)| *x);
-    let y = journal.iter().map(|(_, y)| y.score() as f32);
+    let y1 = journal.iter().map(|(_, y)| y.score() as f32);
+    let y2 = journal.iter().map(|(_, y)| y.len() as f32);
 
     let mut chart = plotters::chart::ChartBuilder::on(root)
         .caption("Score / jour", ("sans-serif", 30).into_font())
         .x_label_area_size(35)
         .y_label_area_size(40)
+        .right_y_label_area_size(40)
         .margin(10)
-        .build_cartesian_2d(bound_x(x.clone()), bound_y(y.clone()))?;
+        .build_cartesian_2d(bound_x(x.clone()), bound_y(y1.clone()))?
+        .set_secondary_coord(bound_x(x.clone()), bound_y(y2.clone()));
 
     chart
         .configure_mesh()
         .disable_x_mesh()
         .disable_y_mesh()
         .y_desc("Score (n * 2^difficulté)")
+        .y_label_formatter(&|y| format!("{y:0}"))
+        .draw()?;
+
+    chart
+        .configure_secondary_axes()
+        .y_desc("nb")
         .y_label_formatter(&|y| format!("{y:0}"))
         .draw()?;
 
@@ -38,13 +47,18 @@ pub fn draw(
     }))?;
 
     chart.draw_series(plotters::series::LineSeries::new(
-        x.clone().zip(y.clone()),
+        x.clone().zip(y1.clone()),
         plotters::style::BLACK,
     ))?;
 
+    chart.draw_secondary_series(plotters::series::Histogram::vertical(&chart)
+        .style(plotters::style::BLACK.mix(0.2).filled())
+        .data(x.clone().zip(y2.clone()))
+    )?;
+
     let (a, b) = linregress(
         x.clone().map(|x| x.num_days_from_ce() as f64).collect(),
-        y.map(Into::into).collect(),
+        y1.map(Into::into).collect(),
     )?;
     let x0 = x.next().unwrap();
     let x1 = x.last().unwrap();
