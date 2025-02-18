@@ -107,6 +107,7 @@ pub enum Wall {
     WoodyWood,
     Pecker,
 
+    Poutre,
     #[serde(rename = "La Mother")]
     LaMother,
 
@@ -137,9 +138,9 @@ impl Wall {
         use Wall::*;
 
         match self {
-            WoodyWood | Pecker => Kind::Dalle,
+            DaDaDa | WoodyWood | Pecker | Poutre => Kind::Dalle,
             Togepi | Pythagore | ArrachToiDLa => Kind::Enfant,
-            DaDaDa | Sparrow | WhiteSide | Bluetooth => Kind::Reta,
+            Sparrow | WhiteSide | Bluetooth => Kind::Reta,
             Rhino | R2D2 | WarSpace | KleinKlein | Sushi | PlugPlay => Kind::Haut,
             AuCoin | Pixels | GaffeATesGenoux | Ocean => Kind::Dierdre,
             TouxPi | Arrow | LeDiamant | Origami | Hexaordinaire | LaTornade | LeCulDuChien
