@@ -7,8 +7,8 @@ pub fn draw(
     root: &plotters::drawing::DrawingArea<plotters::backend::BitMapBackend, plotters::coord::Shift>,
 ) -> crate::Result {
     let mut x = journal.iter().map(|(x, _)| *x);
-    let y1 = journal.iter().map(|(_, y)| y.score() as f32);
-    let y2 = journal.iter().map(|(_, y)| y.len() as f32);
+    let y1 = journal.iter().map(|(_, y)| y.len() as f32);
+    let y2 = journal.iter().map(|(_, y)| y.score() as f32);
 
     let mut chart = plotters::chart::ChartBuilder::on(root)
         .caption("Score / jour", ("sans-serif", 30).into_font())
@@ -22,18 +22,23 @@ pub fn draw(
     chart
         .configure_mesh()
         .disable_x_mesh()
-        .disable_y_mesh()
-        .y_desc("Score (n * 2^difficulté)")
+        .y_desc("nb")
+        .light_line_style(plotters::style::TRANSPARENT)
         .y_label_formatter(&|y| format!("{y:0}"))
         .draw()?;
 
     chart
         .configure_secondary_axes()
-        .y_desc("nb")
+        .y_desc("Score (n * 2^difficulté)")
         .y_label_formatter(&|y| format!("{y:0}"))
         .draw()?;
 
-    chart.draw_series(journal.iter().map(|(x, y)| {
+    let histogram = plotters::series::Histogram::vertical(&chart)
+        .style(plotters::style::BLACK.mix(0.2).filled())
+        .data(x.clone().zip(y1.clone()));
+    chart.draw_series(histogram)?;
+
+    chart.draw_secondary_series(journal.iter().map(|(x, y)| {
         let style = y
             .color()
             .as_ref()
@@ -46,19 +51,14 @@ pub fn draw(
         plotters::prelude::Circle::new((*x, y.score() as f32), 3, style)
     }))?;
 
-    chart.draw_series(plotters::series::LineSeries::new(
-        x.clone().zip(y1.clone()),
+    chart.draw_secondary_series(plotters::series::LineSeries::new(
+        x.clone().zip(y2.clone()),
         plotters::style::BLACK,
     ))?;
 
-    chart.draw_secondary_series(plotters::series::Histogram::vertical(&chart)
-        .style(plotters::style::BLACK.mix(0.2).filled())
-        .data(x.clone().zip(y2.clone()))
-    )?;
-
     let (a, b) = linregress(
         x.clone().map(|x| x.num_days_from_ce() as f64).collect(),
-        y1.map(Into::into).collect(),
+        y2.map(Into::into).collect(),
     )?;
     let x0 = x.next().unwrap();
     let x1 = x.last().unwrap();
@@ -68,7 +68,7 @@ pub fn draw(
         (x1, a * x1.num_days_from_ce() as f32 + b),
     ];
 
-    chart.draw_series(plotters::series::DottedLineSeries::new(points, 0, 3, |c| {
+    chart.draw_secondary_series(plotters::series::DottedLineSeries::new(points, 0, 3, |c| {
         plotters::element::Pixel::new(c, plotters::style::colors::full_palette::GREY)
     }))?;
 
