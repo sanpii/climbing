@@ -86,8 +86,8 @@ impl BlockOut {
 
 impl From<BlockOut> for plotters::style::RGBColor {
     fn from(value: BlockOut) -> Self {
-        use plotters::style::colors::full_palette::*;
         use BlockOut::*;
+        use plotters::style::colors::full_palette::*;
 
         match value {
             B1 => YELLOW,
