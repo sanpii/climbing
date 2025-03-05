@@ -7,7 +7,7 @@ pub fn draw(
     root: &plotters::drawing::DrawingArea<plotters::backend::BitMapBackend, plotters::coord::Shift>,
 ) -> crate::Result {
     let mut x = journal.iter().map(|(x, _)| *x);
-    let y1 = journal.iter().map(|(_, y)| y.len() as f32);
+    let y1 = journal.iter().map(|(_, y)| y.count() as f32);
     let y2 = journal.iter().map(|(_, y)| y.score() as f32);
 
     let mut chart = plotters::chart::ChartBuilder::on(root)

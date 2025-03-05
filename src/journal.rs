@@ -25,6 +25,10 @@ impl Entries {
         self.0.values().map(Entry::score).sum()
     }
 
+    pub fn count(&self) -> usize {
+        self.0.values().map(|x| x.len()).sum()
+    }
+
     pub fn color(&self) -> Option<plotters::style::RGBAColor> {
         self.0
             .values()
