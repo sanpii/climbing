@@ -35,7 +35,7 @@ pub fn draw<T: ToString>(
             root.draw(&bar)?;
         }
 
-        pos.1 += (font_size * 1.4) as i32;
+        pos.1 += (font_size * 1.3) as i32;
     }
 
     axis(pos, max, root)?;
