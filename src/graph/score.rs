@@ -61,7 +61,7 @@ pub fn draw(
         y2.map(Into::into).collect(),
     )?;
     let x0 = x.next().unwrap();
-    let x1 = x.last().unwrap();
+    let x1 = x.next_back().unwrap();
 
     let points = vec![
         (x0, a * x0.num_days_from_ce() as f32 + b),
