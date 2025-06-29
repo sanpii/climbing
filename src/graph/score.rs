@@ -6,9 +6,9 @@ pub fn draw(
     journal: &crate::Journal,
     root: &plotters::drawing::DrawingArea<plotters::backend::BitMapBackend, plotters::coord::Shift>,
 ) -> crate::Result {
-    let mut x = journal.iter().map(|(x, _)| *x);
-    let y1 = journal.iter().map(|(_, y)| y.count() as f32);
-    let y2 = journal.iter().map(|(_, y)| y.score() as f32);
+    let mut x = journal.keys().cloned();
+    let y1 = journal.values().map(|y| y.count() as f32);
+    let y2 = journal.values().map(|y| y.score() as f32);
 
     let mut chart = plotters::chart::ChartBuilder::on(root)
         .caption("Score / jour", ("sans-serif", 30).into_font())
