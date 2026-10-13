@@ -46,7 +46,7 @@ struct Opt {
 fn main() -> Result {
     let opt = Opt::parse();
     let file = std::fs::File::open(opt.filename)?;
-    let journal: Journal = serde_yaml_ng::from_reader(&file)?;
+    let journal: Journal = noyalib::from_reader(&file)?;
 
     let mut image = [0u8; graph::LEN];
     {

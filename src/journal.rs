@@ -157,7 +157,7 @@ impl Wall {
 
 impl std::fmt::Display for Wall {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let s = serde_yaml_ng::to_string(self).unwrap();
+        let s = noyalib::to_string(self).unwrap();
 
         f.write_str(s.trim_end_matches('\n'))
     }
@@ -191,7 +191,7 @@ pub enum Kind {
 
 impl std::fmt::Display for Kind {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let s = serde_yaml_ng::to_string(self).unwrap();
+        let s = noyalib::to_string(self).unwrap();
 
         f.write_str(s.trim_end_matches('\n'))
     }

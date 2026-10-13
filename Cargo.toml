@@ -9,7 +9,7 @@ base64 = "0.23"
 image = "0.25"
 linregress = "0.5"
 plotters = "0.3"
-serde_yaml_ng = "0.10"
+noyalib = "0.0"
 
 [dependencies.clap]
 version = "4.5"
